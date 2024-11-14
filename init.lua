@@ -172,11 +172,14 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+-- make left and right keys cycle between tabs
+vim.keymap.set('n', '<left>', ':tabprev<CR>')
+vim.keymap.set('n', '<right>', ':tabnext<CR>')
+-- make up and down keys move tabs left and right
+vim.keymap.set('n', '<up>', ':tabm -1<CR>')
+vim.keymap.set('n', '<down>', ':tabm +1<CR>')
+
+vim.keymap.set('n', '<leader>n', ':set nu!<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -536,9 +539,13 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
+        clangd = {
+          filetypes = { 'h', 'hpp', 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'fmt' },
+        },
+        zls = {},
+        pyright = {},
         -- pyright = {},
+        -- gopls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -714,13 +721,16 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    'folke/tokyonight.nvim',
+    -- 'folke/tokyonight.nvim',
+    'bcumming/vim-luna', -- Detect tabstop and shiftwidth automatically
+
     priority = 1000, -- make sure to load this before all the other start plugins
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'luna'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
